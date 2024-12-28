@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Notepad by Shaiek Ahmed</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+    #controls {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+      background-color: #f1f1f1;
+    }
+    #controls button, #controls input[type="color"] {
+      padding: 10px;
+      font-size: 16px;
+    }
+    textarea {
+      flex: 1;
+      width: 100%;
+      border: none;
+      padding: 10px;
+      font-size: 24px; /* Large font for better visibility */
+      resize: none;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Notepad by Shaiek Ahmed V1.0</h1>
+  </header>
+  <div id="controls">
+    <button onclick="createNew()">New</button>
+    <button onclick="saveFile()">Save</button>
+    <button onclick="openFile()">Open</button>
+    <label>
+      Font Color: <input type="color" id="fontColor" onchange="changeFontColor()">
+    </label>
+    <label>
+      Background Color: <input type="color" id="bgColor" onchange="changeBgColor()">
+    </label>
+  </div>
+  <textarea id="editor" placeholder="Start typing here..."></textarea>
+
+  <script>
+    const editor = document.getElementById('editor');
+
+    function createNew() {
+      if (confirm("Are you sure you want to create a new note? Unsaved changes will be lost.")) {
+        editor.value = '';
+      }
+    }
+
+    function saveFile() {
+      const text = editor.value;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'note.txt';
+      a.click();
+    }
+
+    function openFile() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.txt';
+      input.onchange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          editor.value = e.target.result;
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    function changeFontColor() {
+      const color = document.getElementById('fontColor').value;
+      editor.style.color = color;
+    }
+
+    function changeBgColor() {
+      const color = document.getElementById('bgColor').value;
+      editor.style.backgroundColor = color;
+    }
+  </script>
+</body>
+</html>
